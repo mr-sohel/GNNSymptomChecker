@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch / Machine Learning model weights and mappings
+*.pth
+*.pt
+mappings.json
+
+# Streamlit and Playwright logs/process files
+streamlit.log
+streamlit.pid
+*.log
+
+# Virtual Environments
+venv/
+.venv/
+env/
+.env/
+
+# Datasets (Uncomment if you don't want to push the CSVs to GitHub)
+# data/*.csv
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Claude Code files
+.claude/
