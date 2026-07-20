@@ -15,8 +15,19 @@ Powered by a 4,920-row clinical dataset (synthesized from Columbia University's 
 
 ## Getting Started
 
-1. **Install Dependencies**
+1. **Set Up a Virtual Environment & Install Dependencies**
+   It is highly recommended to use a virtual environment to avoid package conflicts.
    ```bash
+   # Create a virtual environment
+   python -m venv venv
+
+   # Activate the virtual environment
+   # On Windows:
+   .\venv\Scripts\activate
+   # On Mac/Linux:
+   # source venv/bin/activate
+
+   # Install required packages
    pip install -r requirements.txt
    ```
 
