@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GNN Symptom Checker — বাংলা ব্যাখ্যা (ফাইনাল ডিফেন্স প্রস্তুতি)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a3a6b;
+      --secondary: #2e6da4;
+      --accent: #e8a020;
+      --highlight: #fff3cd;
+      --light-bg: #f4f7fb;
+      --border: #d0dce8;
+      --green: #1a6b3a;
+      --green-light: #d4edda;
+      --red: #6b1a1a;
+      --red-light: #fde8e8;
+      --purple: #4a1a6b;
+      --purple-light: #ede8fd;
+      --text: #1a1a2e;
+      --muted: #5a6478;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Hind Siliguri', 'Noto Serif Bengali', sans-serif;
+      background: #f0f4f8;
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 16px;
+    }
+
+    /* ── Cover Page ── */
+    .cover {
+      background: linear-gradient(135deg, #1a3a6b 0%, #2e6da4 50%, #1a5c8b 100%);
+      color: white;
+      padding: 60px 50px;
+      text-align: center;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -60px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .cover-badge {
+      background: var(--accent);
+      color: #1a1a1a;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 18px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      display: inline-block;
+      letter-spacing: 0.5px;
+    }
+    .cover h1 {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.4;
+      max-width: 750px;
+      margin-bottom: 12px;
+    }
+    .cover .subtitle {
+      font-size: 16px;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+    .cover .meta {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-top: 16px;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+
+    /* ── TOC ── */
+    .toc-box {
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 36px;
+      box-shadow: 0 4px 20px rgba(26,58,107,0.1);
+    }
+    .toc-box h2 {
+      color: var(--primary);
+      font-size: 18px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+    }
+    .toc-list { list-style: none; }
+    .toc-list li {
+      padding: 5px 0;
+      border-bottom: 1px dotted var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .toc-list li:last-child { border: none; }
+    .toc-num {
+      background: var(--primary);
+      color: white;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .toc-list a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* ── Section Cards ── */
+    .section-card {
+      background: white;
+      border-radius: 14px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 20px rgba(26,58,107,0.08);
+      overflow: hidden;
+    }
+    .section-header {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-num {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.5);
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .section-header .en-title {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 3px;
+      font-family: 'Inter', sans-serif;
+    }
+    .section-body {
+      padding: 28px 32px;
+    }
+
+    /* ── Sub-sections ── */
+    .subsection {
+      margin-bottom: 28px;
+    }
+    .subsection h3 {
+      color: var(--secondary);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subsection h3::before {
+      content: '▶';
+      color: var(--accent);
+      font-size: 12px;
+    }
+    .subsection h4 {
+      color: var(--primary);
+      font-size: 15px;
+      font-weight: 600;
+      margin: 16px 0 8px;
+    }
+    p {
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      border-left: 5px solid;
+    }
+    .callout-key {
+      background: #e8f0fb;
+      border-color: var(--secondary);
+    }
+    .callout-important {
+      background: var(--highlight);
+      border-color: var(--accent);
+    }
+    .callout-defense {
+      background: var(--green-light);
+      border-color: var(--green);
+    }
+    .callout-formula {
+      background: var(--purple-light);
+      border-color: var(--purple);
+    }
+    .callout-warning {
+      background: var(--red-light);
+      border-color: var(--red);
+    }
+    .callout-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Equation Box ── */
+    .eq-box {
+      background: #f8f4ff;
+      border: 2px solid #9b7cd4;
+      border-radius: 10px;
+      padding: 16px 22px;
+      margin: 14px 0;
+      font-family: 'Inter', monospace;
+      text-align: center;
+    }
+    .eq-box .formula {
+      font-size: 17px;
+      color: #4a1a6b;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .eq-box .explanation {
+      font-size: 14px;
+      color: var(--muted);
+      font-family: 'Hind Siliguri', sans-serif;
+      font-weight: 400;
+    }
+
+    /* ── Tables ── */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .styled-table th {
+      background: var(--primary);
+      color: white;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .styled-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .styled-table tr:nth-child(even) td { background: var(--light-bg); }
+    .styled-table tr:last-child td { border-bottom: none; }
+    .styled-table .highlight-row td {
+      background: var(--highlight);
+      font-weight: 600;
+    }
+
+    /* ── Term Pills ── */
+    .term-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .term-pill {
+      background: var(--light-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .term-pill .en { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--secondary); font-weight: 600; }
+    .term-pill .bn { font-size: 14px; color: var(--text); font-weight: 500; margin-top: 3px; }
+
+    /* ── Defense Tips ── */
+    .defense-tips {
+      background: linear-gradient(135deg, #1a4a2e, #1a6b3a);
+      color: white;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-top: 24px;
+    }
+    .defense-tips h3 {
+      font-size: 16px;
+      margin-bottom: 14px;
+      color: #7cffb2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .defense-tips ul { padding-left: 20px; }
+    .defense-tips li { margin-bottom: 8px; font-size: 14px; opacity: 0.95; }
+
+    /* ── Metrics Grid ── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .metric-card {
+      background: var(--light-bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+    .metric-card .metric-name { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .metric-card .metric-val { font-size: 22px; color: var(--primary); font-weight: 700; margin: 4px 0; }
+    .metric-card .metric-bn { font-size: 12px; color: var(--secondary); }
+    .metric-card.best { border-color: var(--green); background: var(--green-light); }
+    .metric-card.best .metric-val { color: var(--green); }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; }
+    .step-item {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .step-num {
+      background: var(--primary);
+      color: white;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-content { flex: 1; }
+    .step-content strong { color: var(--primary); }
+
+    /* ── Final Summary ── */
+    .final-summary {
+      background: linear-gradient(135deg, #1a3a6b, #2e6da4);
+      color: white;
+      border-radius: 14px;
+      padding: 32px;
+      margin-top: 36px;
+    }
+    .final-summary h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #ffd700;
+      text-align: center;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .summary-item {
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .summary-item .label { font-size: 12px; opacity: 0.7; margin-bottom: 4px; }
+    .summary-item .value { font-size: 15px; font-weight: 600; }
+
+    /* ── Print ── */
+    @media print {
+      body { background: white; }
+      .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section-card { page-break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+      .defense-tips { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .final-summary { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    @page {
+      margin: 15mm;
+      size: A4;
+    }
+
+    ul, ol { padding-left: 22px; margin-bottom: 12px; }
+    li { margin-bottom: 6px; }
+    strong { color: var(--primary); }
+    .tag {
+      display: inline-block;
+      background: var(--secondary);
+      color: white;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+      margin: 20px 0;
+      border-radius: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ COVER ══════════════════ -->
+<div class="cover">
+  <div class="cover-badge">📚 ফাইনাল ডিফেন্স প্রস্তুতি গাইড</div>
+  <h1>Explainable Heterogeneous GNN with Severity-Weighted Edges<br>for Clinical Symptom-Disease Prediction</h1>
+  <div class="subtitle">IEEE গবেষণাপত্রের সম্পূর্ণ বাংলা ব্যাখ্যা</div>
+  <div class="subtitle">সম্পূর্ণ সেকশন বিশ্লেষণ | মূল সূত্র | ডিফেন্স প্রশ্নোত্তর প্রস্তুতি</div>
+  <div class="meta">Knowledge Engineering Final Project &nbsp;|&nbsp; Graph Neural Network Symptom Checker &nbsp;|&nbsp; 2026</div>
+</div>
+
+<!-- ══════════════════ CONTAINER ══════════════════ -->
+<div class="container">
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc-box">
+    <h2>📋 বিষয়বস্তু সূচি (Table of Contents)</h2>
+    <ul class="toc-list">
+      <li><span class="toc-num">১</span> <div>সার-সংক্ষেপ (Abstract) — গবেষণাটি কী নিয়ে?</div></li>
+      <li><span class="toc-num">২</span> <div>ভূমিকা (Introduction) — কেন এই গবেষণা দরকার?</div></li>
+      <li><span class="toc-num">৩</span> <div>সম্পর্কিত কাজ (Related Work) — আগে কী হয়েছে?</div></li>
+      <li><span class="toc-num">৪</span> <div>পদ্ধতি (Methodology) — কীভাবে তৈরি করা হয়েছে?</div></li>
+      <li><span class="toc-num">৫</span> <div>পরীক্ষা-নিরীক্ষা ও ফলাফল (Experiments & Results)</div></li>
+      <li><span class="toc-num">৬</span> <div>আলোচনা (Discussion) — ফলাফলের গভীর বিশ্লেষণ</div></li>
+      <li><span class="toc-num">৭</span> <div>উপসংহার ও ভবিষ্যৎ কাজ (Conclusion & Future Work)</div></li>
+      <li><span class="toc-num">⭐</span> <div>মূল পরিভাষা ও ডিফেন্স কৌশল</div></li>
+    </ul>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 0 — ABSTRACT
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="abstract">
+    <div class="section-header">
+      <div class="section-num">০</div>
+      <div>
+        <h2>সার-সংক্ষেপ (Abstract)</h2>
+        <div class="en-title">Abstract — গবেষণার সংক্ষিপ্ত পরিচয়</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="callout callout-key">
+        <div class="callout-title">🔑 Abstract কী?</div>
+        Abstract হলো পুরো গবেষণাপত্রের সংক্ষিপ্ত সারসংক্ষেপ। এটি সাধারণত ১৫০–২৫০ শব্দের মধ্যে থাকে এবং এতে গবেষণার সমস্যা, পদ্ধতি, এবং ফলাফল একসাথে উপস্থাপন করা হয়। যেকোনো পাঠক Abstract পড়েই বুঝতে পারেন গবেষণাটি কী নিয়ে।
+      </div>
+
+      <div class="subsection">
+        <h3>এই Abstract-এ কী বলা হয়েছে?</h3>
+
+        <div class="step-item">
+          <div class="step-num">১</div>
+          <div class="step-content">
+            <strong>সমস্যা চিহ্নিতকরণ:</strong> আধুনিক ডিজিটাল স্বাস্থ্যসেবায় Symptom Checker (লক্ষণ পরীক্ষক) একটি গুরুত্বপূর্ণ হাতিয়ার। কিন্তু বেশিরভাগ বিদ্যমান পদ্ধতি রোগীর লক্ষণগুলোকে স্বাধীন (independent) ডেটা হিসেবে বিবেচনা করে, যা চিকিৎসাবিজ্ঞানের বাস্তবতার সাথে সামঞ্জস্যপূর্ণ নয়।
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">২</div>
+          <div class="step-content">
+            <strong>প্রস্তাবিত সমাধান:</strong> এই গবেষণায় একটি <strong>H-GraphConv (Heterogeneous Graph Convolutional Network)</strong> তৈরি করা হয়েছে যেখানে রোগ ও লক্ষণের মধ্যে সম্পর্ককে <strong>Graph</strong> হিসেবে উপস্থাপন করা হয়। প্রতিটি সংযোগের (edge) ওজন লক্ষণের সম্ভাবনা ও গাম্ভীর্য দিয়ে নির্ধারিত।
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">৩</div>
+          <div class="step-content">
+            <strong>ডেটাসেট:</strong> Columbia University-র Disease-Symptom Knowledge Base থেকে প্রাপ্ত <strong>৪,৯২০টি রোগীর রেকর্ড</strong>, <strong>৪১টি রোগ</strong> এবং <strong>১৩১টি লক্ষণ</strong> ব্যবহার করা হয়েছে।
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">৪</div>
+          <div class="step-content">
+            <strong>ফলাফল:</strong> মডেলটি ২০০ epoch-এ training loss ১০৪.৬২ থেকে ০.২৭৯-তে নেমে এসেছে। মূল পারফরম্যান্স মেট্রিক্স: Accuracy 95.3%, F1-Score 95.7%, AUC-ROC 0.9412।
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">৫</div>
+          <div class="step-content">
+            <strong>XAI মডিউল:</strong> প্রতিটি ভবিষ্যদ্বাণীর জন্য কোন লক্ষণ কতটুকু গুরুত্বপূর্ণ ছিল তা গণিতগতভাবে সঠিকভাবে ব্যাখ্যা করা হয়।
+          </div>
+        </div>
+
+      </div>
+
+      <div class="defense-tips">
+        <h3>🎯 ডিফেন্সে যা বলবেন</h3>
+        <ul>
+          <li>আমাদের গবেষণার মূল অবদান হলো দুটি: (১) Severity-Weighted Graph এবং (২) Mathematically Exact XAI।</li>
+          <li>আমরা একটি Knowledge Graph-ভিত্তিক clinical diagnosis system তৈরি করেছি যা traditional ML-এর চেয়ে বেশি কার্যকর।</li>
+          <li>এই system Streamlit-এ deploy করা হয়েছে, তাই এটি real-time ব্যবহারের উপযোগী।</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION I — INTRODUCTION
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="intro">
+    <div class="section-header">
+      <div class="section-num">I</div>
+      <div>
+        <h2>ভূমিকা (Introduction)</h2>
+        <div class="en-title">Introduction — কেন এই গবেষণা করা হলো?</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection">
+        <h3>A. পটভূমি ও প্রেরণা (Background & Motivation)</h3>
+
+        <p>বিশ্বের স্বাস্থ্যসেবা ব্যবস্থায় ডিজিটাল রূপান্তর ঘটছে দ্রুতগতিতে। Electronic Health Records (EHR), wearable sensor, এবং mobile অ্যাপ থেকে প্রচুর পরিমাণে ক্লিনিক্যাল ডেটা তৈরি হচ্ছে। কৃত্রিম বুদ্ধিমত্তা (AI), বিশেষ করে Deep Learning, এই ডেটা থেকে অর্থপূর্ণ pattern খুঁজে বের করতে পারে।</p>
+
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 মূল সমস্যা কী?</div>
+          <p>রোগের লক্ষণগুলো পরস্পর সম্পর্কিত। উদাহরণ: "উচ্চ জ্বর + কাঁপুনি" এবং "উচ্চ জ্বর + শ্বাসকষ্ট" — দুটোতেই উচ্চ জ্বর আছে, কিন্তু রোগ ভিন্ন! পুরনো Machine Learning পদ্ধতি (SVM, Random Forest, Feed-forward Neural Network) প্রতিটি লক্ষণকে আলাদাভাবে দেখে, তাদের মধ্যে সম্পর্ক উপেক্ষা করে। এটাই মূল সমস্যা।</p>
+        </div>
+
+        <p><strong>Knowledge Engineering</strong> এই সমস্যার সমাধান দেয়। Medical domain-কে একটি <strong>Knowledge Graph (KG)</strong> হিসেবে উপস্থাপন করা হয় যেখানে nodes হলো রোগ ও লক্ষণ, এবং edges হলো তাদের মধ্যে সম্পর্ক। এর উপরে Graph Neural Network (GNN) চালালে topology থেকে শিক্ষা নিতে পারে।</p>
+      </div>
+
+      <div class="subsection">
+        <h3>B. সমস্যার বিবৃতি (Problem Statement)</h3>
+
+        <p>বিদ্যমান GNN-ভিত্তিক diagnostic system-এ দুটি মূল দুর্বলতা রয়েছে:</p>
+
+        <table class="styled-table">
+          <tr>
+            <th>#</th>
+            <th>সমস্যা</th>
+            <th>বিস্তারিত ব্যাখ্যা</th>
+          </tr>
+          <tr>
+            <td><strong>১</strong></td>
+            <td><strong>Binary Edge Problem</strong></td>
+            <td>বিদ্যমান মডেলগুলো রোগ-লক্ষণ সম্পর্ককে শুধু 0 বা 1 (আছে বা নেই) দিয়ে দেখায়। কিন্তু <strong>Malaria-তে জ্বর ৯৫% ক্ষেত্রে আসে</strong>, আর <strong>Arthritis-এ জ্বর মাত্র ৪০% ক্ষেত্রে</strong> — এই পার্থক্য ধরা যায়্বা যায় না।</td>
+          </tr>
+          <tr>
+            <td><strong>২</strong></td>
+            <td><strong>Explainability Gap</strong></td>
+            <td>আধুনিক GNN "black box" — কেন এই রোগ predict করা হলো তা বোঝা যায় না। ডাক্তার ও নিয়ন্ত্রক সংস্থা (regulator) কারণ না জানলে AI-এর পরামর্শ মানতে পারে না।</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="subsection">
+        <h3>C. প্রস্তাবিত সমাধান ও অবদান (Contributions)</h3>
+
+        <div class="term-grid">
+          <div class="term-pill">
+            <div class="en">Contribution 1</div>
+            <div class="bn">Severity-Weighted Graph তৈরি</div>
+          </div>
+          <div class="term-pill">
+            <div class="en">Contribution 2</div>
+            <div class="bn">H-GraphConv Architecture</div>
+          </div>
+          <div class="term-pill">
+            <div class="en">Contribution 3</div>
+            <div class="bn">XAI Attribution Module</div>
+          </div>
+          <div class="term-pill">
+            <div class="en">Contribution 4</div>
+            <div class="bn">Streamlit Web App Deploy</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="defense-tips">
+        <h3>🎯 ডিফেন্সে যা বলবেন</h3>
+        <ul>
+          <li>"Traditional ML পদ্ধতি feature independence assume করে, কিন্তু medical symptom-এ এটা সত্য নয়।"</li>
+          <li>"আমরা Knowledge Graph ব্যবহার করেছি কারণ এটি রোগ-লক্ষণের relational structure সঠিকভাবে ধরতে পারে।"</li>
+          <li>"আমাদের দুটি মূল contribution: weighted edges এবং mathematically exact XAI।"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION II — RELATED WORK
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="related">
+    <div class="section-header">
+      <div class="section-num">II</div>
+      <div>
+        <h2>সম্পর্কিত কাজ (Related Work)</h2>
+        <div class="en-title">Literature Review — আগে কী গবেষণা হয়েছে?</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="callout callout-key">
+        <div class="callout-title">🔑 Related Work কেন গুরুত্বপূর্ণ?</div>
+        Related Work বিভাগে আমরা দেখাই যে আমাদের আগে কী কী গবেষণা হয়েছে এবং সেগুলোর কোথায় সীমাবদ্ধতা রয়েছে। এটি আমাদের গবেষণার প্রয়োজনীয়তা প্রমাণ করে।
+      </div>
+
+      <div class="subsection">
+        <h3>A. Traditional ML ও Deep Learning (পেপার ১–৫)</h3>
+        <p>এই বিভাগে ৫টি গুরুত্বপূর্ণ গবেষণা বিশ্লেষণ করা হয়েছে:</p>
+        <table class="styled-table">
+          <tr><th>লেখক</th><th>কাজ</th><th>সীমাবদ্ধতা</th></tr>
+          <tr><td>Esteva et al.</td><td>Deep Learning দিয়ে medical image diagnosis</td><td>শুধু image, symptom না</td></tr>
+          <tr><td>Topol (2019)</td><td>AI vs Human doctor comparison</td><td>Tabular data, graph না</td></tr>
+          <tr><td>Rajkomar et al.</td><td>EHR থেকে mortality prediction</td><td>Feature independence assumed</td></tr>
+          <tr><td>Chen et al.</td><td>Clinical classifier-এ discrimination</td><td>Relational structure ignore</td></tr>
+          <tr><td>Obermeyer et al.</td><td>Health algorithm-এ racial bias</td><td>Non-ontological approach</td></tr>
+        </table>
+        <div class="callout callout-warning">
+          <div class="callout-title">⚠️ সকলের একই সীমাবদ্ধতা</div>
+          উপরের সব গবেষণাই symptom-কে tabular (ছকের মতো) ডেটা হিসেবে ব্যবহার করেছে। তারা লক্ষণগুলোর পারস্পরিক সম্পর্ক (relational structure) মডেল করতে পারেনি।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>B. Knowledge Graph ও Medical Ontology (পেপার ৬–১০)</h3>
+        <p>Knowledge Graph নিয়ে গবেষণায় দেখা গেছে static KG ডেটা সংরক্ষণে ভালো, কিন্তু নতুন রোগীর অসম্পূর্ণ লক্ষণ দিয়ে prediction করতে পারে না। এর জন্য GNN দরকার।</p>
+      </div>
+
+      <div class="subsection">
+        <h3>C. GNN in Healthcare (পেপার ১১–১৫)</h3>
+        <p>Sun et al. [15] হলো আমাদের সবচেয়ে কাছের গবেষণা — তারা GCN দিয়ে disease-symptom link predict করেছে, কিন্তু <strong>binary, unweighted edge</strong> ব্যবহার করেছে। আমরা এখানেই নতুন কিছু যোগ করেছি: severity-weighted edge।</p>
+      </div>
+
+      <div class="subsection">
+        <h3>D. Explainable AI (পেপার ১৬–২০)</h3>
+        <p>XAI গবেষণায় দেখা যায় SHAP, LIME, GNNExplainer সব approximation-ভিত্তিক — অর্থাৎ exact নয়। আমাদের Latent Feature Attribution method mathematically exact।</p>
+      </div>
+
+      <div class="callout callout-important">
+        <div class="callout-title">⭐ গবেষণার ফাঁক (Research Gap)</div>
+        কোনো বিদ্যমান গবেষণায় একসাথে: (১) clinically grounded weighted edges + (২) mathematically exact XAI — দুটোই নেই। এই ফাঁকটি আমাদের গবেষণা পূরণ করেছে।
+      </div>
+
+      <div class="defense-tips">
+        <h3>🎯 ডিফেন্সে যা বলবেন</h3>
+        <ul>
+          <li>আমরা ২০টি পেপার ৪টি থিমে বিশ্লেষণ করেছি এবং একটি স্পষ্ট research gap খুঁজে পেয়েছি।</li>
+          <li>Sun et al. [15] আমাদের সবচেয়ে কাছের পূর্ববর্তী কাজ, কিন্তু তারা weighted edge ব্যবহার করেনি।</li>
+          <li>আমাদের XAI approach perturbation-based method-এর চেয়ে superior কারণ এটি exact।</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION III — METHODOLOGY
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="methodology">
+    <div class="section-header">
+      <div class="section-num">III</div>
+      <div>
+        <h2>পদ্ধতি (Methodology)</h2>
+        <div class="en-title">System Methodology — কীভাবে System তৈরি করা হলো?</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection">
+        <h3>A. ডেটাসেট ও Graph নির্মাণ</h3>
+
+        <h4>১. ডেটা কোথা থেকে এসেছে?</h4>
+        <p>Columbia University-এর Disease-Symptom Knowledge Base থেকে দুটি CSV ফাইল ব্যবহার করা হয়েছে:</p>
+        <ul>
+          <li><strong>dataset.csv</strong> — ৪,৯২০ রোগীর রেকর্ড (৪১টি রোগ, ১৩১টি লক্ষণ)</li>
+          <li><strong>Symptom-severity.csv</strong> — প্রতিটি লক্ষণের clinical গুরুত্ব স্কোর (১–৭)</li>
+        </ul>
+
+        <h4>২. Edge Weight কীভাবে নির্ণয় করা হয়?</h4>
+        <div class="callout callout-formula">
+          <div class="callout-title">📐 মূল সূত্র (Equation 1) — সবচেয়ে গুরুত্বপূর্ণ!</div>
+        </div>
+        <div class="eq-box">
+          <div class="formula">W<sub>d,s</sub> = P(s | d) × Severity(s)</div>
+          <div class="explanation">
+            যেখানে: P(s|d) = রোগ d-তে লক্ষণ s-এর conditional probability<br>
+            Severity(s) = লক্ষণ s-এর clinical গুরুত্ব (১ থেকে ৭)
+          </div>
+        </div>
+
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 উদাহরণ দিয়ে বুঝুন</div>
+          <ul>
+            <li>Malaria-তে জ্বর (fever): P = 0.95, Severity = 5 → W = <strong>4.75</strong> (বেশি weight)</li>
+            <li>Arthritis-এ জ্বর: P = 0.40, Severity = 5 → W = <strong>2.00</strong> (কম weight)</li>
+            <li>এইভাবে model বুঝতে পারে কোন রোগে কোন লক্ষণ বেশি গুরুত্বপূর্ণ।</li>
+          </ul>
+        </div>
+
+        <h4>৩. Heterogeneous Graph কীভাবে তৈরি?</h4>
+        <p>Graph-এ দুই ধরনের node এবং দুই ধরনের edge রয়েছে:</p>
+        <table class="styled-table">
+          <tr><th>উপাদান</th><th>বিবরণ</th><th>সংখ্যা</th></tr>
+          <tr><td>Disease Node</td><td>রোগের নোড (identity matrix I₄₁)</td><td>৪১টি</td></tr>
+          <tr><td>Symptom Node</td><td>লক্ষণের নোড (identity matrix I₁₃₁)</td><td>১৩১টি</td></tr>
+          <tr><td>exhibits edge</td><td>রোগ → লক্ষণ</td><td>E সংখ্যক</td></tr>
+          <tr><td>rev_exhibits edge</td><td>লক্ষণ → রোগ (reverse)</td><td>E সংখ্যক</td></tr>
+        </table>
+        <p>প্রতিটি node-এর initial feature হলো <strong>identity matrix</strong> — অর্থাৎ প্রতিটি রোগ ও লক্ষণ একটি unique one-hot vector। সব discriminative learning graph topology থেকে শেখা হবে।</p>
+      </div>
+
+      <div class="subsection">
+        <h3>B. Model Architecture (H-GraphConv)</h3>
+
+        <h4>১. GraphConv অপারেটর</h4>
+        <div class="eq-box">
+          <div class="formula">h<sub>v</sub><sup>(ℓ+1)</sup> = W<sub>root</sub> · h<sub>v</sub><sup>(ℓ)</sup> + W<sub>neigh</sub> · Σ w<sub>u,v</sub> · h<sub>u</sub><sup>(ℓ)</sup></div>
+          <div class="explanation">
+            h<sub>v</sub> = node v-এর embedding | W<sub>root</sub> = নিজের জন্য weight matrix<br>
+            W<sub>neigh</sub> = প্রতিবেশীর জন্য weight matrix | w<sub>u,v</sub> = edge weight (আমাদের W<sub>d,s</sub>)
+          </div>
+        </div>
+
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 GraphConv কেন GCNConv-এর চেয়ে ভালো?</div>
+          GraphConv সরাসরি edge_weight টেনসর গ্রহণ করতে পারে। GCNConv পারে না। তাই আমাদের severity-weighted edge ব্যবহার করার জন্য GraphConv অপরিহার্য।
+        </div>
+
+        <h4>২. to_hetero() — Heterogeneous Conversion</h4>
+        <p><code>to_hetero(GNN, metadata, aggr='sum')</code> কী করে?</p>
+        <ul>
+          <li>Graph-এর সব node type ও edge type দেখে</li>
+          <li>প্রতিটি edge type-এর জন্য আলাদা GraphConv weight matrix তৈরি করে</li>
+          <li>এটি R-GCN (Relational GCN) এর সমতুল্য</li>
+        </ul>
+
+        <h4>৩. Input Projection</h4>
+        <div class="eq-box">
+          <div class="formula">z<sub>d</sub> = W<sub>dis</sub> · I<sub>[d]</sub> ∈ ℝ<sup>64</sup> &nbsp;&nbsp;&nbsp; z<sub>s</sub> = W<sub>sym</sub> · I<sub>[s]</sub> ∈ ℝ<sup>64</sup></div>
+          <div class="explanation">
+            Disease ও Symptom নোডের ভিন্ন মাত্রাকে (41 ও 131) একই 64-মাত্রিক space-এ আনা হয়
+          </div>
+        </div>
+
+        <h4>৪. সম্পূর্ণ Architecture</h4>
+        <table class="styled-table">
+          <tr><th>Layer</th><th>Type</th><th>Input → Output</th><th>Parameters</th></tr>
+          <tr><td>disease_lin</td><td>Linear</td><td>41 → 64</td><td>2,624</td></tr>
+          <tr><td>symptom_lin</td><td>Linear</td><td>131 → 64</td><td>8,384</td></tr>
+          <tr><td>conv1_exhibits</td><td>GraphConv</td><td>64 → 64</td><td>8,256</td></tr>
+          <tr><td>conv1_rev_exhibits</td><td>GraphConv</td><td>64 → 64</td><td>8,256</td></tr>
+          <tr><td>conv2_exhibits</td><td>GraphConv</td><td>64 → 64</td><td>8,256</td></tr>
+          <tr><td>conv2_rev_exhibits</td><td>GraphConv</td><td>64 → 64</td><td>8,256</td></tr>
+          <tr class="highlight-row"><td colspan="3"><strong>মোট Trainable Parameters</strong></td><td><strong>44,032</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="subsection">
+        <h3>C. Link Prediction Training</h3>
+
+        <p><strong>Training কীভাবে কাজ করে?</strong> মডেলটি শেখে কোন রোগ-লক্ষণ pair আসলে সংযুক্ত (positive) আর কোনটা নয় (negative)।</p>
+
+        <div class="eq-box">
+          <div class="formula">ŷ<sub>ij</sub> = e<sub>i</sub> · e<sub>j</sub> = Σ E<sub>i,k</sub> · E<sub>j,k</sub> (k=1 to 64)</div>
+          <div class="explanation">Dot Product: দুটি embedding-এর similarity পরিমাপ করে</div>
+        </div>
+
+        <div class="eq-box">
+          <div class="formula">Loss = BCEWithLogitsLoss(ŷ, y)</div>
+          <div class="explanation">Binary Cross-Entropy Loss — positive edge-এর জন্য score বেশি, negative-এর জন্য কম হওয়া উচিত</div>
+        </div>
+
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 Negative Sampling কী?</div>
+          প্রতিটি real edge (positive) এর বিপরীতে একটি random non-existing edge (negative) তৈরি করা হয়। এইভাবে model শেখে real connection এবং random connection-এর মধ্যে পার্থক্য। Ratio: 1:1।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>D. Patient Inference (রোগী Diagnosis)</h3>
+
+        <p>নতুন রোগী লক্ষণ দিলে কীভাবে রোগ predict হয়?</p>
+
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">১</div>
+            <div class="step-content">
+              <strong>Patient Profile Embedding:</strong>
+              <div class="eq-box" style="margin-top:8px">
+                <div class="formula">e<sub>p</sub> = (1/n) Σ e<sub>si</sub></div>
+                <div class="explanation">রোগীর সব লক্ষণের embedding-এর গড় নেওয়া হয়</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">২</div>
+            <div class="step-content">
+              <strong>Disease Score:</strong>
+              <div class="eq-box" style="margin-top:8px">
+                <div class="formula">Score(d) = σ(e<sub>d</sub> · e<sub>p</sub>) ∈ [0, 1]</div>
+                <div class="explanation">প্রতিটি রোগের embedding-এর সাথে patient embedding-এর dot product, তারপর sigmoid</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">৩</div>
+            <div class="step-content"><strong>Top-k রোগ</strong> score অনুযায়ী ranked করে output দেওয়া হয়।</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>E. Explainable AI — Latent Feature Attribution</h3>
+
+        <div class="callout callout-important">
+          <div class="callout-title">⭐ এটি সবচেয়ে গুরুত্বপূর্ণ অংশ!</div>
+          এই অংশটি আমাদের গবেষণার সবচেয়ে নতুন ও উদ্ভাবনী অবদান।
+        </div>
+
+        <h4>গণিতের মূল কৌশল:</h4>
+        <div class="eq-box">
+          <div class="formula">e<sub>d</sub> · e<sub>p</sub> = e<sub>d</sub> · (1/n Σ e<sub>si</sub>) = (1/n) Σ (e<sub>d</sub> · e<sub>si</sub>)</div>
+          <div class="explanation">Dot product-এর distributive property ব্যবহার করে prediction score-কে প্রতিটি লক্ষণের আলাদা contribution-এ ভাগ করা হয়</div>
+        </div>
+
+        <div class="eq-box">
+          <div class="formula">Attribution(s<sub>i</sub>, D) = (1/n) × (e<sub>D</sub> · e<sub>si</sub>)</div>
+          <div class="explanation">লক্ষণ s<sub>i</sub> রোগ D-এর prediction-এ কতটুকু ভূমিকা রেখেছে তার exact measure</div>
+        </div>
+
+        <table class="styled-table">
+          <tr><th>XAI Property</th><th>বাংলায় অর্থ</th><th>আমাদের Method</th></tr>
+          <tr><td>Completeness</td><td>সব attribution যোগ করলে মোট score পাওয়া যাবে</td><td>✅ Exact (Eq. 10 থেকে)</td></tr>
+          <tr><td>Symmetry</td><td>একই লক্ষণ সবসময় একই attribution পাবে</td><td>✅ Embedding unique বলে</td></tr>
+          <tr><td>Sensitivity</td><td>অপ্রাসঙ্গিক লক্ষণের attribution = 0</td><td>✅ Dot product = 0 হলে</td></tr>
+        </table>
+
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 কেন এটি অনন্য?</div>
+          <ul>
+            <li><strong>SHAP, LIME, GNNExplainer</strong> — approximation-ভিত্তিক, পরিবর্তনশীল ফলাফল</li>
+            <li><strong>আমাদের method</strong> — exact mathematical decomposition, deterministic (সবসময় একই ফলাফল)</li>
+            <li>Clinical deployment-এ exact ও reproducible explanation নিয়ন্ত্রকদের জন্য অপরিহার্য</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="defense-tips">
+        <h3>🎯 ডিফেন্সে Methodology নিয়ে যা বলবেন</h3>
+        <ul>
+          <li>"Edge weight formula W = P(s|d) × Severity(s) হলো আমাদের প্রথম মূল উদ্ভাবন।"</li>
+          <li>"GraphConv ব্যবহার করেছি কারণ এটি edge_weight directly গ্রহণ করে।"</li>
+          <li>"to_hetero() R-GCN-এর মতো কাজ করে — প্রতিটি edge type-এর জন্য আলাদা parameters।"</li>
+          <li>"XAI-এ আমরা dot product-এর distributive property ব্যবহার করে exact decomposition করেছি।"</li>
+          <li>"Training-এ negative sampling 1:1 ratio-তে করা হয়েছে।"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION IV — EXPERIMENTS & RESULTS
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="results">
+    <div class="section-header">
+      <div class="section-num">IV</div>
+      <div>
+        <h2>পরীক্ষা-নিরীক্ষা ও ফলাফল (Experiments & Results)</h2>
+        <div class="en-title">Experiments — Model পরীক্ষার ফলাফল</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection">
+        <h3>A. Hyperparameter Configuration</h3>
+        <table class="styled-table">
+          <tr><th>Hyperparameter</th><th>বাংলায় অর্থ</th><th>মান</th></tr>
+          <tr><td>Hidden Channels</td><td>Hidden embedding-এর মাত্রা</td><td>64</td></tr>
+          <tr><td>GNN Layers</td><td>Graph convolution layer সংখ্যা</td><td>2</td></tr>
+          <tr><td>Optimizer</td><td>Gradient update পদ্ধতি</td><td>Adam</td></tr>
+          <tr><td>Learning Rate</td><td>শেখার গতি</td><td>0.01</td></tr>
+          <tr><td>Loss Function</td><td>Error পরিমাপ</td><td>BCEWithLogitsLoss</td></tr>
+          <tr><td>Epochs</td><td>পূর্ণ training cycle</td><td>200</td></tr>
+          <tr><td>Negative Ratio</td><td>Positive:Negative edge</td><td>1:1</td></tr>
+        </table>
+      </div>
+
+      <div class="subsection">
+        <h3>B. Training Loss Convergence (Loss কমার ধারা)</h3>
+
+        <table class="styled-table">
+          <tr><th>Epoch</th><th>Training Loss</th><th>ব্যাখ্যা</th></tr>
+          <tr><td>1</td><td>104.62</td><td>শুরুতে high — severity weight-এর কারণে বড় embedding magnitude</td></tr>
+          <tr><td>20</td><td>28.41</td><td>দ্রুত কমছে</td></tr>
+          <tr><td>40</td><td>8.93</td><td>—</td></tr>
+          <tr><td>80</td><td>2.17</td><td>—</td></tr>
+          <tr><td>120</td><td>0.89</td><td>—</td></tr>
+          <tr><td>160</td><td>0.44</td><td>—</td></tr>
+          <tr class="highlight-row"><td><strong>200</strong></td><td><strong>0.279</strong></td><td><strong>99.7% হ্রাস — অত্যন্ত সফল convergence!</strong></td></tr>
+        </table>
+
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 Convergence কেন গুরুত্বপূর্ণ?</div>
+          Loss যদি smooth-ভাবে কমে (না ওঠানামা করে), তাহলে বোঝা যায় model stable এবং gradient explosion বা vanishing হয়নি। ১০৪.৬২ থেকে ০.২৭৯ — এটি ৯৯.৭% হ্রাস, যা মডেলের শক্তিশালী learning ক্ষমতা প্রমাণ করে।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>C. মূল পারফরম্যান্স মেট্রিক্স</h3>
+
+        <h4>মেট্রিক্সের সংজ্ঞা ও সূত্র:</h4>
+        <table class="styled-table">
+          <tr><th>Metric</th><th>বাংলায় অর্থ</th><th>সূত্র</th></tr>
+          <tr><td><strong>Accuracy</strong></td><td>সামগ্রিক নির্ভুলতা</td><td>(TP+TN)/(TP+TN+FP+FN)</td></tr>
+          <tr><td><strong>Precision</strong></td><td>Positive prediction-এর নির্ভুলতা</td><td>TP/(TP+FP)</td></tr>
+          <tr><td><strong>Recall</strong></td><td>আসল Positive ধরার ক্ষমতা</td><td>TP/(TP+FN)</td></tr>
+          <tr><td><strong>F1-Score</strong></td><td>Precision ও Recall-এর সমন্বয়</td><td>2×P×R/(P+R)</td></tr>
+          <tr><td><strong>AUC-ROC</strong></td><td>Discrimination ক্ষমতা (0.5–1.0)</td><td>ROC curve-এর নিচের area</td></tr>
+        </table>
+
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 Confusion Matrix থেকে হিসাব</div>
+          TP=912, TN=847, FP=43, FN=38 (মোট test: 1,840)
+        </div>
+        <div class="eq-box">
+          <div class="formula">Accuracy = (912+847)/(912+847+43+38) = 1759/1840 = 95.6%</div>
+          <div class="formula">Precision = 912/(912+43) = 95.5%</div>
+          <div class="formula">Recall = 912/(912+38) = 96.0%</div>
+          <div class="formula">F1 = 2×0.955×0.960/(0.955+0.960) = 95.7%</div>
+        </div>
+
+        <h4>Comparative Performance:</h4>
+        <div class="metrics-grid">
+          <div class="metric-card best">
+            <div class="metric-name">H-GraphConv (আমাদের)</div>
+            <div class="metric-val">95.3%</div>
+            <div class="metric-bn">Accuracy</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">Binary GCN</div>
+            <div class="metric-val">88.2%</div>
+            <div class="metric-bn">Accuracy</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">Random Forest</div>
+            <div class="metric-val">82.7%</div>
+            <div class="metric-bn">Accuracy</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">SVM</div>
+            <div class="metric-val">78.4%</div>
+            <div class="metric-bn">Accuracy</div>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card best">
+            <div class="metric-name">F1-Score</div>
+            <div class="metric-val">95.7%</div>
+            <div class="metric-bn">H-GraphConv</div>
+          </div>
+          <div class="metric-card best">
+            <div class="metric-name">AUC-ROC</div>
+            <div class="metric-val">0.9412</div>
+            <div class="metric-bn">H-GraphConv</div>
+          </div>
+          <div class="metric-card best">
+            <div class="metric-name">Recall</div>
+            <div class="metric-val">96.0%</div>
+            <div class="metric-bn">H-GraphConv</div>
+          </div>
+          <div class="metric-card best">
+            <div class="metric-name">Precision</div>
+            <div class="metric-val">95.5%</div>
+            <div class="metric-bn">H-GraphConv</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>D. ROC Curve বিশ্লেষণ</h3>
+        <p><strong>ROC (Receiver Operating Characteristic) Curve</strong> হলো একটি graph যেখানে:</p>
+        <ul>
+          <li>X-axis: False Positive Rate (FPR = FP/(FP+TN))</li>
+          <li>Y-axis: True Positive Rate (TPR/Recall = TP/(TP+FN))</li>
+        </ul>
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 AUC-ROC = 0.9412 মানে কী?</div>
+          <ul>
+            <li>AUC = 0.50 → Random guessing (কোনো discrimination নেই)</li>
+            <li>AUC = 1.00 → Perfect classifier</li>
+            <li>AUC = <strong>0.9412</strong> → আমাদের model অত্যন্ত ভালো! ৯৪.১২% সময় সঠিকভাবে positive এবং negative edge আলাদা করতে পারে।</li>
+            <li>Binary GCN (0.921) থেকে ২.০% বেশি — weighted edge-এর সুস্পষ্ট উপকার।</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>E. Diagnostic Inference উদাহরণ</h3>
+        <table class="styled-table">
+          <tr><th>Input Symptom</th><th>Top-1 Prediction</th><th>Top-2</th><th>Top-3</th></tr>
+          <tr><td>উচ্চজ্বর, কাঁপুনি, ঘাম</td><td><strong>Malaria (≥0.85)</strong></td><td>Dengue</td><td>Typhoid</td></tr>
+          <tr><td>চুলকানি, চর্মরোগ, জন্ডিস</td><td><strong>Hepatitis B (≥0.78)</strong></td><td>Hepatitis C</td><td>Hepatitis A</td></tr>
+          <tr><td>গিঁটে ব্যথা, ফোলা</td><td><strong>Arthritis (≥0.82)</strong></td><td>Osteoarthritis</td><td>Rheumatoid</td></tr>
+          <tr><td>কাশি, শ্বাসকষ্ট, বুকে ব্যথা</td><td><strong>Pneumonia (≥0.75)</strong></td><td>Tuberculosis</td><td>Asthma</td></tr>
+        </table>
+      </div>
+
+      <div class="subsection">
+        <h3>F. XAI Attribution Case Study</h3>
+
+        <p><strong>Case 1 — Malaria:</strong> Input: {কাঁপুনি, উচ্চজ্বর}</p>
+        <p>Attribution(উচ্চজ্বর) ≫ Attribution(কাঁপুনি) — কারণ Malaria-তে জ্বরের prevalence >90%, কাঁপুনির ~65%।</p>
+
+        <p><strong>Case 2 — Hepatitis B:</strong> Input: {চুলকানি, চর্মরোগ, জন্ডিস, পেটব্যথা}</p>
+        <p>Attribution(জন্ডিস) সর্বোচ্চ — কারণ জন্ডিস liver disease-এর pathognomonic sign (নিশ্চিত চিহ্ন)।</p>
+      </div>
+
+      <div class="defense-tips">
+        <h3>🎯 ডিফেন্সে Results নিয়ে যা বলবেন</h3>
+        <ul>
+          <li>"99.7% loss reduction proves model stability and successful learning."</li>
+          <li>"AUC-ROC 0.9412 মানে model 94% এর বেশি সময় সঠিকভাবে discriminate করতে পারে।"</li>
+          <li>"Binary GCN-এর তুলনায় +7.1% Accuracy এবং +8.7% F1 — weighted edge-এর সরাসরি উপকার।"</li>
+          <li>"Confusion Matrix: TP=912, TN=847 — model দুটি class-ই ভালোভাবে চেনে।"</li>
+          <li>"XAI attribution clinically meaningful — জন্ডিস সঠিকভাবে সর্বোচ্চ attribution পেয়েছে Hepatitis B-তে।"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION V — DISCUSSION
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="discussion">
+    <div class="section-header">
+      <div class="section-num">V</div>
+      <div>
+        <h2>আলোচনা (Discussion)</h2>
+        <div class="en-title">Discussion — ফলাফলের গভীর বিশ্লেষণ ও সীমাবদ্ধতা</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection">
+        <h3>A. Severity-Weighted Edge-এর গুরুত্ব</h3>
+        <p>Unweighted graph-এ প্রতিটি লক্ষণ সমান গুরুত্ব পায়। ফলে model "হলমার্ক লক্ষণ" (যা রোগের সবচেয়ে নির্ভরযোগ্য চিহ্ন) এবং "আনুষঙ্গিক লক্ষণ" (যা ঘটনাক্রমে আসে) পার্থক্য করতে পারে না।</p>
+        <p>Weighted formulation-এ GraphConv উচ্চ weight-এর edge থেকে বেশি তথ্য নেয় এবং নিম্ন weight-এর edge থেকে কম। ফলে শেখা embedding clinically সঠিক।</p>
+        <p><strong>পরিমাণগত প্রমাণ:</strong> Binary GCN-এর তুলনায় Accuracy +7.1%, F1-Score +8.7%।</p>
+      </div>
+
+      <div class="subsection">
+        <h3>B. Latent Feature Attribution-এর গাণিতিক সঠিকতা</h3>
+
+        <div class="callout callout-important">
+          <div class="callout-title">⭐ অত্যন্ত গুরুত্বপূর্ণ বিষয়</div>
+          আমাদের Attribution formula exact (সঠিক) — approximation নয়। SHAP ও LIME sampling করে estimate করে, তাই তাদের ফলাফল run-to-run পরিবর্তন হয়। আমাদের formula deterministic — একই input দিলে সবসময় একই explanation।
+        </div>
+
+        <table class="styled-table">
+          <tr><th>পদ্ধতি</th><th>ধরন</th><th>Reproducible?</th><th>Clinical উপযোগিতা</th></tr>
+          <tr><td>SHAP</td><td>Approximation (sampling)</td><td>না সবসময়</td><td>কম</td></tr>
+          <tr><td>LIME</td><td>Approximation (perturbation)</td><td>না</td><td>কম</td></tr>
+          <tr><td>GNNExplainer</td><td>Optimization-based</td><td>না</td><td>মাঝারি</td></tr>
+          <tr class="highlight-row"><td><strong>আমাদের Attribution</strong></td><td><strong>Exact (closed-form)</strong></td><td><strong>হ্যাঁ, সবসময়</strong></td><td><strong>সর্বোচ্চ</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="subsection">
+        <h3>C. সীমাবদ্ধতা (Limitations)</h3>
+
+        <table class="styled-table">
+          <tr><th>#</th><th>সীমাবদ্ধতা</th><th>বিস্তারিত</th></tr>
+          <tr><td>১</td><td>Synthetic Dataset</td><td>৪,৯২০ রেকর্ড knowledge base থেকে তৈরি — real patient encounter নয়। বাস্তবে noise, missing value এবং একসাথে একাধিক রোগ থাকতে পারে।</td></tr>
+          <tr><td>২</td><td>Single-Hop Reasoning</td><td>2-layer GNN শুধু 2-hop পর্যন্ত দেখতে পারে। Disease → Symptom → Anatomical Region → Treatment — এই ধরনের multi-hop reasoning সম্ভব নয়।</td></tr>
+          <tr><td>৩</td><td>No Temporal Modeling</td><td>রোগীর সময়ের সাথে পরিবর্তন (disease progression) ধরতে পারে না।</td></tr>
+          <tr><td>৪</td><td>Closed-World Assumption</td><td>Training graph-এ নেই এমন নতুন রোগ predict করা সম্ভব নয়।</td></tr>
+          <tr><td>৫</td><td>Severity Data</td><td>একটি knowledge base থেকে severity weight — বিভিন্ন জনগোষ্ঠী বা clinical context-এ ভিন্ন হতে পারে।</td></tr>
+        </table>
+
+        <div class="callout callout-key">
+          <div class="callout-title">🔑 Limitations স্বীকার করা কেন জরুরি?</div>
+          একটি ভালো গবেষণাপত্র সবসময় তার সীমাবদ্ধতা সৎভাবে উল্লেখ করে। এটি গবেষণার বিশ্বাসযোগ্যতা বাড়ায় এবং ভবিষ্যৎ গবেষকদের পথ দেখায়।
+        </div>
+      </div>
+
+      <div class="defense-tips">
+        <h3>🎯 ডিফেন্সে Discussion নিয়ে যা বলবেন</h3>
+        <ul>
+          <li>"আমাদের weighted edge আসলে clinical knowledge encode করে — এটি শুধু technical trick নয়।"</li>
+          <li>"আমাদের XAI method clinically deployable কারণ এটি deterministic এবং auditable।"</li>
+          <li>"আমরা জানি dataset synthetic — তাই future work-এ MIMIC-IV-এ validate করার পরিকল্পনা আছে।"</li>
+          <li>যদি কেউ জিজ্ঞেস করে "এটি real hospital-এ কাজ করবে?" — বলুন: "এই কাজটি proof-of-concept, real deployment-এ validation দরকার।"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION VI — CONCLUSION
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="conclusion">
+    <div class="section-header">
+      <div class="section-num">VI</div>
+      <div>
+        <h2>উপসংহার ও ভবিষ্যৎ কাজ (Conclusion & Future Work)</h2>
+        <div class="en-title">Conclusion — গবেষণার সমাপ্তি ও ভবিষ্যৎ পরিকল্পনা</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection">
+        <h3>A. উপসংহার</h3>
+
+        <p>এই গবেষণায় সফলভাবে একটি <strong>Knowledge Engineering framework</strong> তৈরি এবং যাচাই করা হয়েছে যা clinical symptom checking-কে ব্যাখ্যাযোগ্য (explainable) ও graph-ভিত্তিক করে তোলে।</p>
+
+        <div class="callout callout-important">
+          <div class="callout-title">⭐ মূল অর্জন সমূহ</div>
+          <ul>
+            <li>✅ Heterogeneous Bipartite Knowledge Graph with Severity-Weighted Edges তৈরি</li>
+            <li>✅ Loss: 104.62 → 0.279 (99.7% reduction) — smooth convergence প্রমাণিত</li>
+            <li>✅ Accuracy 95.3%, F1 95.7%, AUC-ROC 0.9412</li>
+            <li>✅ Mathematically exact XAI: Completeness, Symmetry, Sensitivity satisfied</li>
+            <li>✅ Streamlit web app-এ deploy: real-time diagnosis + XAI + sub-graph viz</li>
+            <li>✅ দুটি research gap বন্ধ: weighted edges + exact XAI</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>B. ভবিষ্যৎ কাজ (Future Work)</h3>
+
+        <table class="styled-table">
+          <tr><th>#</th><th>দিকনির্দেশনা</th><th>বিস্তারিত</th></tr>
+          <tr><td>১</td><td>Multi-Type Graph</td><td>Anatomical Region, Lab Test, Medication node যোগ করে multi-hop reasoning</td></tr>
+          <tr><td>২</td><td>Real Clinical Data</td><td>MIMIC-IV, eICU dataset-এ train ও test</td></tr>
+          <tr><td>৩</td><td>Federated Learning</td><td>একাধিক hospital-এর data একত্রে privacy রক্ষা করে train করা</td></tr>
+          <tr><td>৪</td><td>LLM + KG Hybrid</td><td>Natural language-এ symptom input দিতে পারা ও plain language-এ explanation</td></tr>
+          <tr><td>৫</td><td>Clinical Trial</td><td>বাস্তব hospital-এ deploy করে doctor decision-making efficiency পরিমাপ</td></tr>
+        </table>
+      </div>
+
+      <div class="defense-tips">
+        <h3>🎯 ডিফেন্সে Conclusion নিয়ে যা বলবেন</h3>
+        <ul>
+          <li>"আমাদের গবেষণা দুটি নির্দিষ্ট research gap চিহ্নিত করেছে এবং উভয়ই পূরণ করেছে।"</li>
+          <li>"ফলাফলে দেখা গেছে weighted edge ব্যবহার করলে unweighted-এর চেয়ে উল্লেখযোগ্যভাবে ভালো performance পাওয়া যায়।"</li>
+          <li>"LLM + KG integration হলো সবচেয়ে প্রতিশ্রুতিশীল ভবিষ্যৎ গবেষণার দিক।"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       KEY TERMS GLOSSARY
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="terms">
+    <div class="section-header" style="background: linear-gradient(90deg, #1a4a2e, #1a6b3a);">
+      <div class="section-num" style="background:rgba(255,255,255,0.15);">📖</div>
+      <div>
+        <h2>মূল পরিভাষা অভিধান</h2>
+        <div class="en-title">Key Terms Glossary — ডিফেন্সে যে শব্দগুলো জানতে হবে</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="term-grid">
+        <div class="term-pill">
+          <div class="en">Knowledge Graph (KG)</div>
+          <div class="bn">জ্ঞান-সম্পর্ক মানচিত্র: entities (node) ও তাদের মধ্যে সম্পর্ক (edge)-এর নেটওয়ার্ক</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Heterogeneous Graph</div>
+          <div class="bn">বিষমজাতীয় গ্রাফ: একাধিক ধরনের node ও edge বিশিষ্ট গ্রাফ</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Bipartite Graph</div>
+          <div class="bn">দ্বিদলীয় গ্রাফ: দুটি স্বতন্ত্র node-গ্রুপ (রোগ ও লক্ষণ) বিশিষ্ট গ্রাফ</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Message Passing</div>
+          <div class="bn">বার্তা পাঠানো: প্রতিবেশী node থেকে তথ্য সংগ্রহের প্রক্রিয়া</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Link Prediction</div>
+          <div class="bn">সংযোগ পূর্বানুমান: নতুন edge exist করবে কিনা তা predict করা</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Embedding</div>
+          <div class="bn">সংখ্যাসারণি: node/entity-কে real number vector-এ রূপান্তর</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Negative Sampling</div>
+          <div class="bn">নেতিবাচক নমুনা: non-existing edge তৈরি করা training-এর জন্য</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Dot Product</div>
+          <div class="bn">বিন্দু গুণফল: দুই vector-এর similarity measure</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Sigmoid Function</div>
+          <div class="bn">সিগময়েড: যেকোনো সংখ্যাকে 0–1 রেঞ্জে নিয়ে আসে</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">BCEWithLogitsLoss</div>
+          <div class="bn">Binary Cross Entropy: binary classification-এর loss function</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">XAI (Explainable AI)</div>
+          <div class="bn">ব্যাখ্যাযোগ্য AI: কেন এই prediction করল তা মানুষকে বোঝানো</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Attribution</div>
+          <div class="bn">অবদান পরিমাপ: প্রতিটি feature কতটুকু prediction-এ ভূমিকা রেখেছে</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">AUC-ROC</div>
+          <div class="bn">ROC Curve-এর নিচের এলাকা: ১-এর কাছাকাছি হলে ভালো</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Convergence</div>
+          <div class="bn">অভিসরণ: training loss ধীরে ধীরে কমে stable হওয়া</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">to_hetero()</div>
+          <div class="bn">PyG function: homogeneous GNN-কে heterogeneous-এ রূপান্তর</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">GraphConv</div>
+          <div class="bn">PyG operator: edge_weight সহ weighted aggregation করে</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">CDSS</div>
+          <div class="bn">Clinical Decision Support System: চিকিৎসক সিদ্ধান্তে সহায়তাকারী AI</div>
+        </div>
+        <div class="term-pill">
+          <div class="en">Conditional Probability P(s|d)</div>
+          <div class="bn">শর্তযুক্ত সম্ভাবনা: রোগ d দেওয়া থাকলে লক্ষণ s-এর সম্ভাবনা</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       EXPECTED DEFENSE QUESTIONS
+  ═══════════════════════════════════════════ -->
+  <div class="section-card" id="questions">
+    <div class="section-header" style="background: linear-gradient(90deg, #6b1a1a, #a03030);">
+      <div class="section-num" style="background:rgba(255,255,255,0.15);">❓</div>
+      <div>
+        <h2>প্রত্যাশিত ডিফেন্স প্রশ্ন ও উত্তর</h2>
+        <div class="en-title">Expected Defense Questions & Answers</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection">
+        <h3>প্রশ্ন ১: GNN কেন ব্যবহার করলেন, traditional ML কেন নয়?</h3>
+        <div class="callout callout-defense">
+          <div class="callout-title">✅ উত্তর</div>
+          Traditional ML (SVM, Random Forest) প্রতিটি feature স্বাধীনভাবে দেখে। কিন্তু medical symptom পরস্পর সম্পর্কিত — "জ্বর + কাঁপুনি" ভিন্ন রোগ, "জ্বর + শ্বাসকষ্ট" ভিন্ন রোগ। GNN graph topology ব্যবহার করে এই relational structure capture করতে পারে।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>প্রশ্ন ২: Edge weight কীভাবে নির্ণয় করলেন?</h3>
+        <div class="callout callout-defense">
+          <div class="callout-title">✅ উত্তর</div>
+          W(d,s) = P(s|d) × Severity(s)। P(s|d) হলো dataset থেকে গণনা করা conditional probability, Severity হলো Columbia University-র clinical severity table থেকে নেওয়া (1–7 স্কেল)।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>প্রশ্ন ৩: to_hetero() কী করে?</h3>
+        <div class="callout callout-defense">
+          <div class="callout-title">✅ উত্তর</div>
+          PyTorch Geometric-এর to_hetero() function একটি homogeneous GNN-কে heterogeneous-এ convert করে। এটি প্রতিটি edge type-এর জন্য আলাদা weight matrix তৈরি করে। এটি R-GCN-এর মতো কাজ করে।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>প্রশ্ন ৪: XAI কীভাবে কাজ করে? কেন এটি approximate নয়?</h3>
+        <div class="callout callout-defense">
+          <div class="callout-title">✅ উত্তর</div>
+          Dot product-এর distributive property: e_d · (1/n Σ e_si) = (1/n) Σ (e_d · e_si)। এই algebraic identity ব্যবহার করে prediction score সঠিকভাবে প্রতিটি লক্ষণের contribution-এ ভাগ করা যায় — কোনো approximation নেই।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>প্রশ্ন ৫: প্রথমে loss 104.62 কেন এত বেশি ছিল?</h3>
+        <div class="callout callout-defense">
+          <div class="callout-title">✅ উত্তর</div>
+          Edge weight W(d,s) = P × Severity সর্বোচ্চ 1.0 × 7 = 7.0 হতে পারে। বড় edge weight থেকে message passing-এ বড় embedding magnitude তৈরি হয়, ফলে dot product score বড় হয়, তাই initial loss বেশি। কিন্তু GraphConv-এর আলাদা root ও neighbor weight matrix এটি সামলাতে পারে এবং smooth convergence দেয়।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>প্রশ্ন ৬: এই system কি real hospital-এ deploy করা সম্ভব?</h3>
+        <div class="callout callout-defense">
+          <div class="callout-title">✅ উত্তর</div>
+          বর্তমান কাজটি proof-of-concept। Real deployment-এর জন্য: (১) Real EHR data (MIMIC-IV) দিয়ে validate করতে হবে, (২) Medical regulatory approval দরকার, (৩) Federated learning দিয়ে privacy নিশ্চিত করতে হবে। Future work-এ এই পরিকল্পনা উল্লেখ আছে।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>প্রশ্ন ৭: Negative sampling কেন দরকার?</h3>
+        <div class="callout callout-defense">
+          <div class="callout-title">✅ উত্তর</div>
+          Link prediction-এ শুধু positive edge দিয়ে train করলে model সবকিছুকে positive বলে শিখবে। Negative edge যোগ করলে model শেখে কোনটি real connection, কোনটি নয়। আমরা 1:1 ratio ব্যবহার করেছি।
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>প্রশ্ন ৮: AUC-ROC ০.৯৪১২ কি যথেষ্ট ভালো?</h3>
+        <div class="callout callout-defense">
+          <div class="callout-title">✅ উত্তর</div>
+          হ্যাঁ। Medical AI-এ সাধারণত AUC > 0.90 হলে "excellent" হিসেবে বিবেচনা করা হয়। আমাদের 0.9412 এই threshold পার করে। তুলনামূলকভাবে Binary GCN = 0.921, Random Forest = 0.871, SVM = 0.831।
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       FINAL SUMMARY
+  ═══════════════════════════════════════════ -->
+  <div class="final-summary">
+    <h2>🏆 সম্পূর্ণ গবেষণার এক নজর সারসংক্ষেপ</h2>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="label">গবেষণার মূল লক্ষ্য</div>
+        <div class="value">Explainable GNN-ভিত্তিক Symptom Checker তৈরি</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">মূল উদ্ভাবন</div>
+        <div class="value">Severity-Weighted Edge + Exact XAI Attribution</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">ডেটাসেট</div>
+        <div class="value">৪,৯২০ রেকর্ড | ৪১ রোগ | ১৩১ লক্ষণ</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">Model Architecture</div>
+        <div class="value">2-Layer H-GraphConv | ৪৪,০৩২ Parameters</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">Accuracy</div>
+        <div class="value">95.3% (Binary GCN: 88.2%)</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">F1-Score</div>
+        <div class="value">95.7% | Precision: 95.5% | Recall: 96.0%</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">AUC-ROC</div>
+        <div class="value">0.9412 (Excellent — >0.90)</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">Deployment</div>
+        <div class="value">Streamlit Web App (Real-time)</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">Loss Convergence</div>
+        <div class="value">104.62 → 0.279 (99.7% হ্রাস, 200 epoch)</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">XAI Properties</div>
+        <div class="value">Completeness ✅ | Symmetry ✅ | Sensitivity ✅</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">Research Gap Closed</div>
+        <div class="value">Binary Edge Problem + Explainability Gap</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">Future Work (মূল)</div>
+        <div class="value">MIMIC-IV Validation + LLM-KG Hybrid</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 28px; padding: 18px; background: rgba(255,255,255,0.1); border-radius: 10px; text-align: center;">
+      <p style="font-size: 18px; color: #ffd700; font-weight: 700;">💡 ডিফেন্সে সাফল্যের মূলমন্ত্র</p>
+      <p style="font-size: 15px; margin-top: 8px; opacity: 0.9;">
+        "আমাদের গবেষণা দুটি নির্দিষ্ট সমস্যা সমাধান করেছে: unweighted graph-এর সীমাবদ্ধতা এবং black-box prediction-এর অস্বচ্ছতা। প্রতিটি design decision-এর পেছনে clinical ও mathematical যুক্তি রয়েছে।"
+      </p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  // Smooth print preparation
+  window.addEventListener('load', function() {
+    document.title = 'GNN Symptom Checker — বাংলা ব্যাখ্যা (ডিফেন্স প্রস্তুতি)';
+  });
+</script>
+
+</body>
+</html>
