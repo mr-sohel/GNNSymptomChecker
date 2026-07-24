@@ -4,6 +4,7 @@ import json
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from dataset import get_graph_dataset
 from model import SymptomCheckerModel
 
@@ -36,11 +37,32 @@ This tool uses a **Heterogeneous Graph Neural Network (GNN)** with severity-weig
 It also utilizes **Explainable AI (XAI)** to transparently show exactly *why* a disease was predicted based on the learned neighborhood embeddings.
 """)
 
+@st.cache_data
+def load_disease_info():
+    """Load disease descriptions and precautions from CSV files."""
+    desc_df = pd.read_csv("data/symptom_Description.csv").dropna(subset=["Disease"])
+    prec_df = pd.read_csv("data/symptom_precaution.csv").dropna(subset=["Disease"])
+
+    # Normalise keys: lowercase + strip whitespace for fuzzy lookup
+    desc_df["_key"] = desc_df["Disease"].str.lower().str.strip()
+    prec_df["_key"] = prec_df["Disease"].str.lower().str.strip()
+
+    descriptions = dict(zip(desc_df["_key"], desc_df["Description"]))
+    precautions = {}
+    for _, row in prec_df.iterrows():
+        steps = [row[c] for c in ["Precaution_1", "Precaution_2", "Precaution_3", "Precaution_4"]
+                 if pd.notna(row[c]) and str(row[c]).strip()]
+        precautions[row["_key"]] = steps
+
+    return descriptions, precautions
+
 try:
     model, data, mappings = load_model_and_data()
 except Exception as e:
     st.error(f"Error loading model. Please ensure you have trained the model first using `python train.py`.\n\nDetails: {e}")
     st.stop()
+
+descriptions, precautions = load_disease_info()
 
 symptoms_list = list(mappings["symp_to_id"].keys())
 selected_symptoms = st.multiselect("Select Symptoms (e.g. chills, high_fever)", options=symptoms_list)
@@ -144,3 +166,28 @@ if st.button("Predict Disease") and selected_symptoms:
         nx.draw(G, pos, with_labels=True, node_color=colors, node_size=sizes,
                 width=weights, edge_color='gray', font_size=12, font_weight='bold', ax=ax2)
         st.pyplot(fig2)
+
+        st.divider()
+
+        # --- DISEASE INFO SECTION ---
+        lookup_key = top_disease.lower().strip()
+        disease_display = top_disease.replace('_', ' ').title()
+
+        st.subheader(f":material/info: About {disease_display}")
+
+        disease_desc = descriptions.get(lookup_key)
+        if disease_desc:
+            st.info(disease_desc, icon=":material/local_hospital:")
+        else:
+            st.info("No description available for this disease.", icon=":material/local_hospital:")
+
+        disease_prec = precautions.get(lookup_key)
+        if disease_prec:
+            st.subheader(":material/health_and_safety: Recommended precautions")
+            with st.container(border=True):
+                for i, step in enumerate(disease_prec, start=1):
+                    st.markdown(f"**{i}.** {step.strip().capitalize()}")
+        else:
+            st.warning("No precaution data available for this disease.", icon=":material/warning:")
+
+        st.divider()
